@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quotation – Ameria Air Conditioner</title>
+    <style>
+        :root {
+            --red: #e11d35;
+            --ink: #242a33;
+            --line: #000;
+            --bg: #eef0f3;
+            --page: #fff;
+            --text: #1a1a1a;
+            --muted: #666;
+            --soft: #f3f3f3
+        }
+
+        @media (prefers-color-scheme:dark) {
+            :root:not([data-theme=light]) {
+                --bg: #15181c
+            }
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            padding: 20px 10px
+        }
+
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--page);
+            color: var(--text);
+            box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+            padding: 0 0 0
+        }
+
+        .hdr {
+            display: block;
+            width: 100%;
+            height: auto;
+            padding: 40px 40px 0 40px
+        }
+
+        .body {
+            padding: 10px 40px 0
+        }
+
+        h1 {
+            color: #f00;
+            font-size: 26px;
+            margin: 14px 0 14px;
+            font-weight: 700
+        }
+
+        .meta {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 8px 20px;
+            margin-bottom: 12px
+        }
+
+        .meta label {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+            font-weight: 700;
+            font-size: 18px
+        }
+
+        .meta input {
+            flex: 1;
+            min-width: 0;
+            font: inherit;
+            font-weight: 400;
+            border: 0;
+            border-bottom: 1px dashed #999;
+            background: transparent;
+            color: inherit;
+            padding: 2px 4px
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 1px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 2px solid var(--line);
+            font-size: 16px
+        }
+
+        th,
+        td {
+            border: 1px solid var(--line);
+            padding: 3px 6px;
+            vertical-align: middle
+        }
+
+        .title {
+            background: var(--soft);
+            color: #f00;
+            text-align: center;
+            font-weight: 700;
+            font-size: 18px;
+            border-bottom: 2px solid var(--line)
+        }
+
+        thead th {
+            background: var(--soft);
+            font-weight: 700
+        }
+
+        td input {
+            flex: 1;
+            width: 100%;
+            min-width: 0;
+            font: inherit;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            padding: 3px 2px
+        }
+
+        td input.num {
+            text-align: right
+        }
+
+        td.room {
+            width: 150px;
+            text-align: center
+        }
+
+        td.room input {
+            text-align: center
+        }
+
+        td.idx {
+            width: 34px;
+            text-align: center
+        }
+
+        td.qty {
+            width: 60px
+        }
+
+        td.rate {
+            width: 100px
+        }
+
+        td.amt {
+            width: 115px;
+            text-align: right
+        }
+
+        td.amt {
+            padding-right: 6px
+        }
+
+        .sub td,
+        .grand td {
+            background: var(--soft);
+            font-weight: 700;
+            text-align: right;
+            border-top: 2px solid var(--line);
+            font-size: 18px
+        }
+
+        .sub td.l,
+        .grand td.l {
+            color: #f00;
+            padding-right: 8px
+        }
+
+        .grand td {
+            border-top: 2px solid var(--line);
+            border-bottom: 2px solid var(--line)
+        }
+
+        .ctl {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 4px
+        }
+
+        button {
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid #bbb;
+            background: #fafafa;
+            color: #222;
+            border-radius: 4px;
+            padding: 3px 9px
+        }
+
+        button:hover {
+            background: #eee
+        }
+
+        button.x {
+            color: #b00;
+            padding: 0 7px;
+            border-color: transparent;
+            background: transparent;
+            font-size: 16px
+        }
+
+        button.primary {
+            background: var(--ink);
+            color: #fff;
+            border-color: var(--ink)
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0 0
+        }
+
+        .bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 40px;
+            gap: 20px
+        }
+
+        .sign {
+            font-size: 14px;
+            min-width: 200px;
+            flex-shrink: 0;
+            white-space: nowrap;
+            padding-left: 20px;
+        }
+
+        .sign img {
+            display: block;
+            width: 150px;
+            margin: 6px 0 10px
+        }
+
+        .sign b {
+            display: block;
+            border-top: 3px solid #e6e6e6;
+            padding-top: 8px;
+            font-size: 15px;
+            color: #111
+        }
+
+        .notes {
+            flex: 1 1 auto;
+            max-width: 500px;
+            border: 1px solid var(--line);
+            padding: 10px 12px
+        }
+
+        .notes b {
+            font-size: 17px;
+            display: block;
+            margin-bottom: 6px
+        }
+
+        .notes textarea {
+            width: 100%;
+            min-height: 40px;
+            resize: none;
+            overflow: hidden;
+            font: inherit;
+            font-size: 15px;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            padding: 2px;
+            display: block
+        }
+
+        .ftr {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin-top: 10px;
+            padding: 0 40px 40px 40px;
+        }
+
+        @media (max-width:700px) {
+            .body {
+                padding: 8px 12px 16px
+            }
+
+            .meta {
+                grid-template-columns: 1fr
+            }
+
+            .meta label {
+                font-size: 16px
+            }
+
+            table {
+                font-size: 14px
+            }
+
+            td.room {
+                width: 90px
+            }
+
+            td.rate {
+                width: 78px
+            }
+
+            td.amt {
+                width: 86px
+            }
+
+            td.qty {
+                width: 44px
+            }
+
+            .bottom {
+                flex-direction: column;
+                align-items: stretch
+            }
+
+            .notes {
+                width: 100%
+            }
+
+            .tw {
+                overflow-x: auto
+            }
+
+            table {
+                min-width: 560px
+            }
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0
+            }
+
+            .page {
+                box-shadow: none;
+                max-width: none
+            }
+
+            .toolbar,
+            .ctl,
+            button,
+            .x {
+                display: none !important
+            }
+
+            .meta input,
+            textarea {
+                border-color: transparent
+            }
+
+            @page {
+                size: A4;
+                margin: 8mm
+            }
+
+            * {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact
+            }
+            tfoot { display: table-row-group }
+            thead { display: table-header-group }
+            tbody.grp { break-inside: avoid; page-break-inside: avoid }
+
+            .page { display: flex; flex-direction: column;}
+            .body { flex: 1 0 auto }
+            .end { break-inside: avoid; page-break-inside: avoid; margin-top: auto }
+        }
+
+        .end .bottom { padding: 0 40px; margin-top: 40px }
+        button:disabled { opacity: .45; cursor: not-allowed }
+    </style>
+</head>
+
+<body>
+    <div class="page" id="page">
+        <img class="hdr"
+            alt="Ameria Air Conditioner – 9811372477, sanjayameria86@gmail.com, Dhanwapur Road Shop, No. 752 near C.C.A School, Opp. Sector-4 Gurugram. GSTIN 06ATGPK5454P1Z5, State 06 - Haryana"
+            src="/images/header.png">
+        <div class="body">
+            <h1>Quotation</h1>
+            <div class="meta">
+                <label>Name: <input id="name" value=""></label>
+                <label>Zip Code: <input id="zip" inputmode="numeric"></label>
+                <label>Street Address: <input id="street" value=""></label>
+                <label>Date: <input id="date" type=""></label>
+                <label>City/State: <input id="city" value=""></label>
+            </div>
+            <div class="tw">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="6" class="title">PRODUCTS (MATERIALS)</th>
+                        </tr>
+                        <tr>
+                            <th>Room</th>
+                            <th colspan="2">Description</th>
+                            <th>Unit</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tfoot id="tf">
+                        <tr class="grand">
+                            <td class="l" colspan="5">Grand Total</td>
+                            <td id="gt">₹ 0.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="toolbar">
+                <button class="primary" id="addRoom">+ Add room</button>
+                <button id="print">Print / Save as PDF</button>
+                <button id="clear">Clear all rows</button>
+                <button id="undo" disabled>↶ Undo</button>
+            </div>
+        </div>
+        <div class="end">
+            <div class="bottom">
+                <div class="sign">For, Ameria Air Conditioner<img alt="Signature" src="/images/sign.png"></div>
+                <div class="notes"><b>Comments or Special Instructions:</b>
+                    <textarea id="notes" aria-label="Comments or special instructions">• GST 18% extra.</textarea>
+                </div>
+            </div>
+            <img class="ftr" alt="" src="/images/footer.png">
+        </div>
+    </div>
+    <script>
+        var rooms = [{ n: "", i: [{ d: "", q: 1, r: 0 }] }];
+        var STORE = "ameria_quotation_v1";
+        var fieldIds = ["name", "zip", "street", "date", "city"];
+        var saved = null;
+        try { saved = JSON.parse(localStorage.getItem(STORE)); } catch (e) { }
+        if (saved && Array.isArray(saved.rooms)) rooms = saved.rooms;
+
+        function save() {
+            try {
+                var f = {};
+                fieldIds.forEach(function (id) { f[id] = document.getElementById(id).value });
+                localStorage.setItem(STORE, JSON.stringify({
+                    rooms: rooms,
+                    fields: f,
+                    notes: document.getElementById("notes").value
+                }));
+            } catch (e) { }
+        }
+        var rowsEl = document.getElementById("rows");
+        var undoState = null;
+        function snapshot() {
+            undoState = JSON.stringify(rooms);
+            document.getElementById("undo").disabled = false;
+        }
+        var fmt = function (v) { return "₹ " + v.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) };
+        var roman = function (n) { var m = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x", "xi", "xii", "xiii", "xiv", "xv", "xvi", "xvii", "xviii", "xix", "xx"]; return m[n] || String(n + 1) };
+        function el(t, c, h) { var e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e }
+        function inp(v, cls, type, onin, label) { var i = document.createElement("input"); i.value = v == null ? "" : v; if (cls) i.className = cls; if (type) { i.type = type; i.step = "any"; i.min = "0"; i.inputMode = "decimal" } i.setAttribute("aria-label", label); i.oninput = onin; return i }
+        function total(it) { return (parseFloat(it.q) || 0) * (parseFloat(it.r) || 0) }
+        function calc() {
+            var g = 0;
+            rooms.forEach(function (r, ri) {
+                var s = 0;
+                r.i.forEach(function (it, ii) { var a = total(it); s += a; var c = document.getElementById("a" + ri + "_" + ii); if (c) c.textContent = fmt(a) });
+                g += s; var st = document.getElementById("s" + ri); if (st) st.textContent = fmt(s);
+            });
+            document.getElementById("gt").textContent = fmt(g);
+        }
+        function render() {
+            document.querySelectorAll("tbody.grp").forEach(function (t) { t.remove() });
+            var tf = document.getElementById("tf");
+            rooms.forEach(function (r, ri) {
+                var tb = document.createElement("tbody"); tb.className = "grp";
+                r.i.forEach(function (it, ii) {
+                    var tr = document.createElement("tr");
+                    if (ii === 0) {
+                        var td = el("td", "room"); td.rowSpan = r.i.length;
+                        td.appendChild(inp(r.n, "", "", function (e) { r.n = e.target.value }, "Room name"));
+                        var c = el("div", "ctl");
+                        var b = el("button", "", '+ Item'); b.onclick = function () { snapshot(); r.i.push({ d: "", q: 1, r: 0 }); render() }; c.appendChild(b);
+                        var x = el("button", "x", "✕"); x.title = "Remove room"; x.onclick = function () { snapshot(); rooms.splice(ri, 1); render() }; c.appendChild(x);
+                        td.appendChild(c); tr.appendChild(td);
+                    }
+                    tr.appendChild(el("td", "idx", roman(ii) + ")"));
+                    var d = el("td"); d.appendChild(inp(it.d, "", "", function (e) { it.d = e.target.value }, "Description")); tr.appendChild(d);
+                    var q = el("td", "qty"); q.appendChild(inp(it.q, "num", "number", function (e) { it.q = e.target.value; calc() }, "Quantity")); tr.appendChild(q);
+                    var r2 = el("td", "rate"); r2.appendChild(inp(it.r, "num", "number", function (e) { it.r = e.target.value; calc() }, "Rate")); tr.appendChild(r2);
+                    var a = el("td", "amt"); a.id = "a" + ri + "_" + ii; tr.appendChild(a);
+                    if (r.i.length > 1) { var xb = el("button", "x", "✕"); xb.title = "Remove item"; xb.onclick = function () { snapshot(); r.i.splice(ii, 1); render() }; d.style.display = "flex"; d.appendChild(xb) }
+                    tb.appendChild(tr);
+                });
+                var sr = el("tr", "sub"); sr.appendChild(el("td", "l", "Total")); sr.firstChild.colSpan = 5;
+                var sv = el("td"); sv.id = "s" + ri; sr.appendChild(sv); tb.appendChild(sr);
+                tf.parentNode.insertBefore(tb, tf);
+            });
+            calc();
+            save();
+        }
+        document.getElementById("addRoom").onclick = function () {
+            snapshot();
+            rooms.push({ n: "", i: [{ d: "", q: 1, r: 0 }] });
+            render();
+        };
+
+        document.getElementById("clear").onclick = function () {
+            if (confirm("Remove all rooms and items?")) {
+                snapshot();
+                rooms = [{ n: "", i: [{ d: "", q: 1, r: 0 }] }];
+                render();
+            }
+        };
+
+        document.getElementById("undo").onclick = function () {
+            if (!undoState) return;
+            rooms = JSON.parse(undoState);
+            undoState = null;
+            this.disabled = true;
+            render();
+        };
+        document.getElementById("print").onclick = function () { window.print() };
+        if (saved && saved.fields) fieldIds.forEach(function (id) {
+            if (saved.fields[id] != null) document.getElementById(id).value = saved.fields[id];
+        });
+        if (saved && saved.notes != null) document.getElementById("notes").value = saved.notes;
+        if (!document.getElementById("date").value) document.getElementById("date").value = new Date().toISOString().slice(0, 10);
+        document.addEventListener("input", save);
+        var notesEl = document.getElementById("notes");
+        function fitNotes() {
+            notesEl.style.height = "auto";
+            notesEl.style.height = notesEl.scrollHeight + "px";
+        }
+        notesEl.addEventListener("input", fitNotes);
+        var pageEl = document.getElementById("page");
+        function fitPage() {
+            var mm = 96 / 25.4;
+            pageEl.style.width = "194mm";      // A4 width (210mm) minus the 8mm margins
+            pageEl.style.minHeight = "0";
+            var h = pageEl.scrollHeight;
+            var pages = Math.max(1, Math.ceil(h / (281 * mm)));   // A4 height (297mm) minus margins
+            pageEl.style.minHeight = (pages * 281 - 1) + "mm";
+        }
+        function resetPage() {
+            pageEl.style.width = "";
+            pageEl.style.minHeight = "";
+        }
+        window.addEventListener("beforeprint", function () { fitNotes(); fitPage(); });
+        window.addEventListener("afterprint", resetPage);
+        fitNotes();
+        render();
+    </script>
+</body>
+
+</html>
