@@ -27,6 +27,11 @@
             box-sizing: border-box
         }
 
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
         body {
             margin: 0;
             background: var(--bg);
@@ -297,7 +302,7 @@
             padding: 0 40px 40px 40px;
         }
 
-        @media (max-width:700px) {
+        @media screen and (max-width:700px) {
             .body {
                 padding: 8px 12px 16px
             }
@@ -387,6 +392,21 @@
             .page { display: flex; flex-direction: column;}
             .body { flex: 1 0 auto }
             .end { break-inside: avoid; page-break-inside: avoid; margin-top: auto }
+            /* Force desktop layout in PDF, regardless of device */
+            .page { width: 194mm !important; max-width: none !important; }
+            .hdr { padding: 40px 40px 0 40px !important; }
+            .body { padding: 10px 40px 0 !important; }
+            .ftr { padding: 0 40px 40px 40px !important; }
+            .meta { grid-template-columns: 1fr 280px !important; }
+            .meta label { font-size: 18px !important; }
+            table { font-size: 16px !important; min-width: 0 !important; }
+            td.room { width: 150px !important; }
+            td.rate { width: 100px !important; }
+            td.amt { width: 115px !important; }
+            td.qty { width: 60px !important; }
+            .bottom { flex-direction: row !important; align-items: flex-end !important; }
+            .notes { width: auto !important; }
+            .tw { overflow: visible !important; }
         }
 
         .end .bottom { padding: 0 40px; margin-top: 40px }
@@ -398,7 +418,7 @@
     <div class="page" id="page">
         <img class="hdr"
             alt="Ameria Air Conditioner – 9811372477, sanjayameria86@gmail.com, Dhanwapur Road Shop, No. 752 near C.C.A School, Opp. Sector-4 Gurugram. GSTIN 06ATGPK5454P1Z5, State 06 - Haryana"
-            src="./images/header.png">
+            src="/images/header.png">
         <div class="body">
             <h1>Quotation</h1>
             <div class="meta">
@@ -439,12 +459,12 @@
         </div>
         <div class="end">
             <div class="bottom">
-                <div class="sign">For, Ameria Air Conditioner<img alt="Signature" src="./images/sign.png"></div>
+                <div class="sign">For, Ameria Air Conditioner<img alt="Signature" src="/images/sign.png"></div>
                 <div class="notes"><b>Comments or Special Instructions:</b>
                     <textarea id="notes" aria-label="Comments or special instructions">• GST 18% extra.</textarea>
                 </div>
             </div>
-            <img class="ftr" alt="" src="./images/footer.png">
+            <img class="ftr" alt="" src="/images/footer.png">
         </div>
     </div>
     <script>
