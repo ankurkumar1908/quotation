@@ -302,6 +302,16 @@
             padding: 0 40px 40px 40px;
         }
 
+        .end .bottom {
+            padding: 0 40px;
+            margin-top: 40px
+        }
+
+        button:disabled {
+            opacity: .45;
+            cursor: not-allowed
+        }
+
         @media screen and (max-width:700px) {
             .body {
                 padding: 8px 12px 16px
@@ -352,81 +362,6 @@
                 min-width: 560px
             }
         }
-
-        @media print {
-            body {
-                background: #fff;
-                padding: 0
-            }
-
-            .page {
-                box-shadow: none;
-                max-width: none
-            }
-
-            .toolbar,
-            .ctl,
-            button,
-            .x {
-                display: none !important
-            }
-
-            .meta input,
-            textarea {
-                border-color: transparent
-            }
-
-            @page {
-                size: A4;
-                margin: 8mm
-            }
-
-            * {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact
-            }
-            tfoot { display: table-row-group }
-            thead { display: table-header-group }
-            tbody.grp { break-inside: avoid; page-break-inside: avoid }
-
-            .page { display: flex; flex-direction: column;}
-            .body { flex: 1 0 auto }
-            .end { break-inside: avoid; page-break-inside: avoid; margin-top: auto }
-            /* Force desktop layout in PDF, regardless of device */
-            .page { width: 194mm !important; max-width: none !important; }
-            .hdr { padding: 40px 40px 0 40px !important; }
-            .body { padding: 10px 40px 0 !important; }
-            .ftr { padding: 0 40px 40px 40px !important; }
-            .meta { grid-template-columns: 1fr 280px !important; }
-            .meta label { font-size: 18px !important; }
-            table { font-size: 16px !important; min-width: 0 !important; }
-            td.room { width: 150px !important; }
-            td.rate { width: 100px !important; }
-            td.amt { width: 115px !important; }
-            td.qty { width: 60px !important; }
-            .bottom { flex-direction: row !important; align-items: flex-end !important; }
-            .notes { width: auto !important; }
-            .tw { overflow: visible !important; }
-        }
-
-        .end .bottom { padding: 0 40px; margin-top: 40px }
-        button:disabled { opacity: .45; cursor: not-allowed }
-    </style>
-    <style id="forceDesktop" media="not all">
-        .page { width: 194mm; max-width: none }
-        .hdr { padding: 40px 40px 0 }
-        .body { padding: 10px 40px 0 }
-        .ftr { padding: 0 40px 40px }
-        .meta { grid-template-columns: 1fr 280px }
-        .meta label { font-size: 18px }
-        table { font-size: 16px; min-width: 0 }
-        td.room { width: 150px }
-        td.rate { width: 100px }
-        td.amt { width: 115px }
-        td.qty { width: 60px }
-        .bottom { flex-direction: row; align-items: flex-end }
-        .notes { width: auto }
-        .tw { overflow: visible }
     </style>
 </head>
 
@@ -468,7 +403,7 @@
             </div>
             <div class="toolbar">
                 <button class="primary" id="addRoom">+ Add room</button>
-                <button id="print">Print / Save as PDF</button>
+                <button id="print">Download PDF</button>
                 <button id="clear">Clear all rows</button>
                 <button id="undo" disabled>↶ Undo</button>
             </div>
@@ -483,6 +418,9 @@
             <img class="ftr" alt="" src="./images/footer.png">
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         var rooms = [{ n: "", i: [{ d: "", q: 1, r: 0 }] }];
         var STORE = "ameria_quotation_v1";
@@ -502,7 +440,6 @@
                 }));
             } catch (e) { }
         }
-        var rowsEl = document.getElementById("rows");
         var undoState = null;
         function snapshot() {
             undoState = JSON.stringify(rooms);
@@ -573,46 +510,83 @@
             this.disabled = true;
             render();
         };
-        document.getElementById("print").onclick = function () { window.print() };
+
+        /* ---------- PDF export: same A4 desktop layout on every device ---------- */
+        document.getElementById("print").onclick = async function () {
+            var btn = this, old = btn.textContent;
+            btn.disabled = true; btn.textContent = "Creating PDF…";
+            try {
+                if (!window.html2canvas || !window.jspdf) throw new Error("PDF libraries did not load. Check your internet connection.");
+                var A4W = 794, A4H = 1123; // A4 at 96dpi
+                var canvas = await html2canvas(document.getElementById("page"), {
+                    scale: 2,
+                    backgroundColor: "#ffffff",
+                    useCORS: true,
+                    windowWidth: 1200, // desktop viewport, so mobile media queries never apply
+                    onclone: function (doc) {
+                        var st = doc.createElement("style");
+                        st.textContent =
+                            "body{background:#fff!important;padding:0!important}" +
+                            ".page{width:" + A4W + "px!important;max-width:none!important;box-shadow:none!important;display:flex;flex-direction:column}" +
+                            ".body{flex:1 0 auto;padding:10px 40px 0!important}" +
+                            ".hdr{padding:40px 40px 0!important}" +
+                            ".ftr{padding:0 40px 40px!important}" +
+                            ".meta{grid-template-columns:1fr 280px!important}" +
+                            ".meta label{font-size:18px!important}" +
+                            ".meta input{border-color:transparent!important}" +
+                            "table{font-size:16px!important;min-width:0!important}" +
+                            "td.room{width:150px!important}td.rate{width:100px!important}" +
+                            "td.amt{width:115px!important}td.qty{width:60px!important}" +
+                            ".bottom{flex-direction:row!important;align-items:flex-end!important}" +
+                            ".notes{width:auto!important}.tw{overflow:visible!important}" +
+                            ".toolbar,.ctl,.x{display:none!important}" +
+                            ".end{margin-top:auto}";
+                        doc.head.appendChild(st);
+
+                        var ta = doc.getElementById("notes");
+                        ta.style.height = "auto";
+                        ta.style.height = ta.scrollHeight + "px";
+
+                        // make the page a whole number of A4 sheets so the footer sits at the bottom
+                        var p = doc.getElementById("page");
+                        var pages = Math.max(1, Math.ceil((p.scrollHeight - 2) / A4H));
+                        p.style.minHeight = (pages * A4H) + "px";
+                    }
+                });
+
+                var pdf = new window.jspdf.jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
+                var pageH = Math.round(canvas.width * 297 / 210);
+                var n = Math.max(1, Math.ceil((canvas.height - 2) / pageH));
+                for (var i = 0; i < n; i++) {
+                    var s = document.createElement("canvas");
+                    s.width = canvas.width; s.height = pageH;
+                    var ctx = s.getContext("2d");
+                    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, s.width, s.height);
+                    ctx.drawImage(canvas, 0, i * pageH, canvas.width, pageH, 0, 0, canvas.width, pageH);
+                    if (i > 0) pdf.addPage();
+                    pdf.addImage(s.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 210, 297);
+                }
+                var nm = (document.getElementById("name").value || "Customer").trim().replace(/[^\w\-]+/g, "_");
+                pdf.save("Quotation_" + nm + "_" + document.getElementById("date").value + ".pdf");
+            } catch (e) {
+                alert("Could not create PDF: " + e.message);
+            }
+            btn.disabled = false; btn.textContent = old;
+        };
+
         if (saved && saved.fields) fieldIds.forEach(function (id) {
             if (saved.fields[id] != null) document.getElementById(id).value = saved.fields[id];
         });
         if (saved && saved.notes != null) document.getElementById("notes").value = saved.notes;
         if (!document.getElementById("date").value) document.getElementById("date").value = new Date().toISOString().slice(0, 10);
         document.addEventListener("input", save);
+
         var notesEl = document.getElementById("notes");
         function fitNotes() {
             notesEl.style.height = "auto";
             notesEl.style.height = notesEl.scrollHeight + "px";
         }
         notesEl.addEventListener("input", fitNotes);
-        var pageEl = document.getElementById("page");
-        var forceCss = document.getElementById("forceDesktop");
-
-        function fitPage() {
-            var mm = 96 / 25.4;
-            pageEl.style.width = "194mm";
-            pageEl.style.minHeight = "0";
-            var h = pageEl.scrollHeight;
-            var pages = Math.max(1, Math.ceil((h - 2) / (281 * mm)));
-            pageEl.style.minHeight = (pages * 281 - 3) + "mm";
-        }
-        function resetPage() {
-            pageEl.style.width = "";
-            pageEl.style.minHeight = "";
-        }
-        function prepPrint() {
-            forceCss.media = "all";   // desktop layout, so the measurement is correct
-            fitNotes();
-            fitPage();
-        }
-        function endPrint() {
-            forceCss.media = "not all";
-            resetPage();
-            fitNotes();
-        }
-        window.addEventListener("beforeprint", prepPrint);
-        window.addEventListener("afterprint", endPrint);
         fitNotes();
         render();
     </script>
