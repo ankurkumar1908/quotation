@@ -412,6 +412,22 @@
         .end .bottom { padding: 0 40px; margin-top: 40px }
         button:disabled { opacity: .45; cursor: not-allowed }
     </style>
+    <style id="forceDesktop" media="not all">
+        .page { width: 194mm; max-width: none }
+        .hdr { padding: 40px 40px 0 }
+        .body { padding: 10px 40px 0 }
+        .ftr { padding: 0 40px 40px }
+        .meta { grid-template-columns: 1fr 280px }
+        .meta label { font-size: 18px }
+        table { font-size: 16px; min-width: 0 }
+        td.room { width: 150px }
+        td.rate { width: 100px }
+        td.amt { width: 115px }
+        td.qty { width: 60px }
+        .bottom { flex-direction: row; align-items: flex-end }
+        .notes { width: auto }
+        .tw { overflow: visible }
+    </style>
 </head>
 
 <body>
@@ -571,20 +587,32 @@
         }
         notesEl.addEventListener("input", fitNotes);
         var pageEl = document.getElementById("page");
+        var forceCss = document.getElementById("forceDesktop");
+
         function fitPage() {
             var mm = 96 / 25.4;
-            pageEl.style.width = "194mm";      // A4 width (210mm) minus the 8mm margins
+            pageEl.style.width = "194mm";
             pageEl.style.minHeight = "0";
             var h = pageEl.scrollHeight;
-            var pages = Math.max(1, Math.ceil(h / (281 * mm)));   // A4 height (297mm) minus margins
-            pageEl.style.minHeight = (pages * 281 - 1) + "mm";
+            var pages = Math.max(1, Math.ceil((h - 2) / (281 * mm)));
+            pageEl.style.minHeight = (pages * 281 - 3) + "mm";
         }
         function resetPage() {
             pageEl.style.width = "";
             pageEl.style.minHeight = "";
         }
-        window.addEventListener("beforeprint", function () { fitNotes(); fitPage(); });
-        window.addEventListener("afterprint", resetPage);
+        function prepPrint() {
+            forceCss.media = "all";   // desktop layout, so the measurement is correct
+            fitNotes();
+            fitPage();
+        }
+        function endPrint() {
+            forceCss.media = "not all";
+            resetPage();
+            fitNotes();
+        }
+        window.addEventListener("beforeprint", prepPrint);
+        window.addEventListener("afterprint", endPrint);
         fitNotes();
         render();
     </script>
